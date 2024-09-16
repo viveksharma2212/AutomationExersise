@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="3" passed="3" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2024-09-16T16:40:33 CEST" name="Default suite" finished-at="2024-09-16T16:41:49 CEST" duration-ms="75669">
+    <groups>
+    </groups>
+    <test started-at="2024-09-16T16:40:33 CEST" name="Default test" finished-at="2024-09-16T16:41:49 CEST" duration-ms="75669">
+      <class name="com.ae.testSuite.UserSignUpTest">
+        <test-method is-config="true" signature="beforeSuite()[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:40:26 CEST" name="beforeSuite" finished-at="2024-09-16T16:40:33 CEST" duration-ms="6599" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeSuite -->
+        <test-method is-config="true" signature="beforeTest()[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:40:33 CEST" name="beforeTest" finished-at="2024-09-16T16:40:43 CEST" duration-ms="10023" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- beforeTest -->
+        <test-method signature="test00ValidateHomePageDisplayedAndNaviageteToSignUpPage()[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:40:43 CEST" name="test00ValidateHomePageDisplayedAndNaviageteToSignUpPage" finished-at="2024-09-16T16:41:03 CEST" duration-ms="19951" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test00ValidateHomePageDisplayedAndNaviageteToSignUpPage -->
+        <test-method is-config="true" signature="afterMethod(org.testng.ITestResult)[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:41:03 CEST" name="afterMethod" finished-at="2024-09-16T16:41:03 CEST" duration-ms="58" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=test00ValidateHomePageDisplayedAndNaviageteToSignUpPage status=SUCCESS method=UserSignUpTest.test00ValidateHomePageDisplayedAndNaviageteToSignUpPage()[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method signature="test01ValidateSignUpPageAndSignUpWithCorrectData()[pri:1, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:41:03 CEST" name="test01ValidateSignUpPageAndSignUpWithCorrectData" finished-at="2024-09-16T16:41:18 CEST" depends-on-methods="com.ae.testSuite.UserSignUpTest.test00ValidateHomePageDisplayedAndNaviageteToSignUpPage" duration-ms="14467" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test01ValidateSignUpPageAndSignUpWithCorrectData -->
+        <test-method is-config="true" signature="afterMethod(org.testng.ITestResult)[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:41:18 CEST" name="afterMethod" finished-at="2024-09-16T16:41:18 CEST" duration-ms="5" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=test01ValidateSignUpPageAndSignUpWithCorrectData status=SUCCESS method=UserSignUpTest.test01ValidateSignUpPageAndSignUpWithCorrectData()[pri:1, instance:com.ae.testSuite.UserSignUpTest@38102d01] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method signature="test02FillTheDataAndClickSignUp()[pri:2, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:41:18 CEST" name="test02FillTheDataAndClickSignUp" finished-at="2024-09-16T16:41:49 CEST" depends-on-methods="com.ae.testSuite.UserSignUpTest.test01ValidateSignUpPageAndSignUpWithCorrectData" duration-ms="31005" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- test02FillTheDataAndClickSignUp -->
+        <test-method is-config="true" signature="afterMethod(org.testng.ITestResult)[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:41:49 CEST" name="afterMethod" finished-at="2024-09-16T16:41:49 CEST" duration-ms="4" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[[TestResult name=test02FillTheDataAndClickSignUp status=SUCCESS method=UserSignUpTest.test02FillTheDataAndClickSignUp()[pri:2, instance:com.ae.testSuite.UserSignUpTest@38102d01] output={null}]]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterMethod -->
+        <test-method is-config="true" signature="afterTest()[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:41:49 CEST" name="afterTest" finished-at="2024-09-16T16:41:49 CEST" duration-ms="3" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterTest -->
+        <test-method is-config="true" signature="afterSuite()[pri:0, instance:com.ae.testSuite.UserSignUpTest@38102d01]" started-at="2024-09-16T16:41:49 CEST" name="afterSuite" finished-at="2024-09-16T16:41:50 CEST" duration-ms="1243" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- afterSuite -->
+      </class> <!-- com.ae.testSuite.UserSignUpTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
