@@ -2,5 +2,3 @@
 *.class
 *.class
 /test-output
-/target/classes
-target/classes/com/ae/pageMethods/SignUpPageMethods.class
