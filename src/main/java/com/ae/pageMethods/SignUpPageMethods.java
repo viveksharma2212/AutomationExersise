@@ -2,6 +2,7 @@ package com.ae.pageMethods;
 
 import static org.testng.Assert.assertTrue;
 
+import org.openqa.selenium.By;
 import org.testng.asserts.SoftAssert;
 
 import com.ae.base.TestBase;
@@ -28,6 +29,37 @@ public class SignUpPageMethods extends TestBase {
 					"Failed to validate site loaded properly");
 			return false;
 		}
+	}
+	
+	public boolean validateLogin() {
+		SoftAssert softAssert = new SoftAssert();
+		softAssert.assertTrue(validateHomePage());
+		boolean flag = elementDisplayed(signUpPageObjects.signUpEmail);
+		if (flag) {
+			extlog.log(LogStatus.PASS, "Validated sign up page displayed");
+			extlog.log(LogStatus.PASS, captureScreenShot("loginScreen"));
+
+			softAssert.assertTrue(addInputValue(signUpPageObjects.loginEmail, signUpPageObjects.emailValue));
+			softAssert.assertTrue(addInputValue(signUpPageObjects.loginPassword, signUpPageObjects.passwordValue));
+			softAssert.assertAll();
+			clickElement(signUpPageObjects.loginBtn);
+		} else {
+			extlog.log(LogStatus.FAIL, captureScreenShot("validateLoginPageFail"),
+					"Failed to validate site loaded properly");
+		}
+		if(elementDisplayed(By.xpath(homePageObject.loggedInName.replace("VALUE", signUpPageObjects.nameValue)))) {
+			extlog.log(LogStatus.PASS, "Logged in successfully");
+			highlightElement(By.xpath(homePageObject.loggedInName.replace("VALUE", signUpPageObjects.nameValue)));
+			extlog.log(LogStatus.PASS, captureScreenShot("loginName"));
+			unhighlightElement(By.xpath(homePageObject.loggedInName.replace("VALUE", signUpPageObjects.nameValue)));
+			return true;
+		}else {
+			extlog.log(LogStatus.FAIL, captureScreenShot("validateLoginFail"),
+					"Failed to validate user logged in correctly");
+			return false;
+		}
+
+		
 	}
 	
 	public boolean validateSignupPageAndFillData() {
@@ -86,6 +118,5 @@ public class SignUpPageMethods extends TestBase {
 		
 		
 	}
-
-
+	
 }
