@@ -1,0 +1,20 @@
+{
+    "name": "Vivek Sharma",
+    "title": "Mr",
+    "password": "test121221",
+    "dateOfBirth": {
+      "day": "22",
+      "month": "December",
+      "year": "1993"
+    },
+    "firstName": "Vivek",
+    "lastName": "Sharma",
+    "address": {
+      "street": "Test Address",
+      "country": "India",
+      "state": "Maharashtra",
+      "city": "Pune",
+      "zipcode": "411027"
+    },
+    "mobileNumber": "8887776665"
+ }

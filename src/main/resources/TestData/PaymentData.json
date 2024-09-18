@@ -1,0 +1,8 @@
+{
+    "cardNumber": "4444 3333 2222 1111",
+    "cvv": "888",
+    "expirationDate": {
+      "month": "12",
+      "year": "2026"
+    }
+}

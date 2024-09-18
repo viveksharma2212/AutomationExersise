@@ -88,16 +88,33 @@ public class TestBase {
    }
     
 	public String readJson(String parameter)  {
+		
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = null;
+        
+		int firstDotIndex = parameter.indexOf(".");
+        String file = parameter.substring(0, firstDotIndex);
+        String param = parameter.substring(firstDotIndex + 1);
+        String fileName=null;
+        if (file.equalsIgnoreCase("user")) {
+        	fileName="UserData.json";
+        }else if(file.equalsIgnoreCase("payment")) {
+        	fileName="PaymentData.json";
+        }else if(file.equalsIgnoreCase("orders")) {
+        	fileName="OrderData.json";
+        }else
+        {
+        	LOGGER.error("No file present for Parameter:"+file);
+        }        
+        
 		try {
-			jsonNode = mapper.readTree(new File(workingDir +"/src/main/resources/TestData/TestData.json"));
+			jsonNode = mapper.readTree(new File(workingDir +"/src/main/resources/TestData/"+fileName));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-        String[] path = parameter.split("\\.");
+        String[] path = param.split("\\.");
 
         JsonNode node = jsonNode;
         for (String p : path) {
