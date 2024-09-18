@@ -17,10 +17,7 @@ public class CartAndPaymentPageMethods extends TestBase {
 		if (elementDisplayed(cartPageObjects.proceedToCheckout)) {
 			By xpath = By.xpath(cartPageObjects.productName.replace("VALUE", productName));
 			elementDisplayed(xpath);
-			extlog.log(LogStatus.PASS, "Correct Product added to cart -" + productName);
-			highlightElement(xpath);
-			extlog.log(LogStatus.INFO, captureScreenShot("cartProduct_" + productName));
-			unhighlightElement(xpath);
+			highlightAndCapture("Correct Product added to cart -" + productName, xpath, "cartProduct_" + productName);
 			return true;
 		} else {
 			extlog.log(LogStatus.FAIL, captureScreenShot("cartProduct_" + productName),
@@ -30,10 +27,12 @@ public class CartAndPaymentPageMethods extends TestBase {
 	}
 
 	public boolean makePaymentAndConfirmOrder() {
+		sleep(10);
 		clickElement(cartPageObjects.proceedToCheckout);
 		if (elementDisplayed(cartPageObjects.reviewOrder)) {
 			extlog.log(LogStatus.PASS, "Cart Checkout Page Displayed");
 			extlog.log(LogStatus.INFO, captureScreenShot("ProductCheckOut"));
+			scrollToElement(cartPageObjects.placeOrder);
 			clickElement(cartPageObjects.placeOrder);
 			return fillPaymentDetailsAndPay();
 		} else {
@@ -58,7 +57,9 @@ public class CartAndPaymentPageMethods extends TestBase {
 			if (elementDisplayed(cartPageObjects.orderPaced)) {
 				extlog.log(LogStatus.PASS, "Order Placed successfully");
 				extlog.log(LogStatus.INFO, captureScreenShot("orderConfirmed"));
-				
+				clickElement(signUpPageObjects.logout);
+				sleep(5);
+				clickElement(homePageObject.home);
 				return true;
 			} else {
 				extlog.log(LogStatus.FAIL, captureScreenShot("ProductCheckOut"), "failed to place Order successfully");

@@ -1,16 +1,17 @@
 package com.ae.pageMethods;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.asserts.SoftAssert;
 
 import com.ae.base.TestBase;
-import com.ae.pageObjects.HomePageObjects;
-import com.ae.pageObjects.ProductsPageObject;
+
 import com.relevantcodes.extentreports.LogStatus;
 
 public class ProductsPageMethods extends TestBase {
-	HomePageObjects homePageObject=new HomePageObjects();
-	ProductsPageObject productsPageObject= new ProductsPageObject();
+
 	CartAndPaymentPageMethods cartAndPaymentPageMethods=new CartAndPaymentPageMethods();
 	
 	public void addProductToCartAndValidate(String productName) {
@@ -27,10 +28,7 @@ public class ProductsPageMethods extends TestBase {
 	public boolean verifyProductDisplayed(String productName) {
 		By element=By.xpath(productsPageObject.product.replace("VALUE", productName));
 		if (elementDisplayed(element)) {
-			extlog.log(LogStatus.PASS, "Correct Product displayed after search-" + productName);
-			highlightElement(element);
-			extlog.log(LogStatus.INFO, captureScreenShot("SearchProduct_" + productName));
-			unhighlightElement(element);
+			highlightAndCapture("Correct Product displayed after search-" + productName, element, "SearchProduct_" + productName);
 			return true;
 		} else {
 			extlog.log(LogStatus.FAIL,captureScreenShot("SearchProduct_" + productName),
@@ -44,10 +42,7 @@ public class ProductsPageMethods extends TestBase {
 		clickElement(element);
 		sleep(2);
 		if (elementDisplayed(productsPageObject.added)) {
-			extlog.log(LogStatus.PASS, "Product Added Confirmation-" + productName);
-			highlightElement(productsPageObject.added);
-			extlog.log(LogStatus.INFO, captureScreenShot("ProductAddedToCart_" + productName));
-			unhighlightElement(productsPageObject.added);
+			highlightAndCapture("Product Added Confirmation-" + productName, productsPageObject.added, "ProductAddedToCart_" + productName);
 			return true;
 		} else {
 			extlog.log(LogStatus.FAIL,captureScreenShot("ProductAddedToCart_" + productName),
@@ -77,10 +72,103 @@ public class ProductsPageMethods extends TestBase {
 		SoftAssert softAssert = new SoftAssert();
 		softAssert.assertTrue(cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.peacockSaree));
 		softAssert.assertTrue(cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.sleevelessDress));
-		softAssert.assertTrue(cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.pureCottonTShirt));
-		return cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.peacockSaree);
+		softAssert.assertAll();
+		return cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.pureCottonTShirt);
 	}
 	
+	
+	public boolean filter() {
+		clickElement(homePageObject.products);
+		sleep(5);
+		if (elementDisplayed(productsPageObject.menFilter)) {
+			clickElement(productsPageObject.menFilter);
+			sleep(2);
+			highlightAndCapture("Men filter displayed and clicked", productsPageObject.menFilter, "MenFilter");			
+			if (elementDisplayed(productsPageObject.jeansfilter)) {
+				highlightAndCapture("Men jeans filter displayed and clicked", productsPageObject.jeansfilter, "MenFilter");	
+				clickElement(productsPageObject.jeansfilter);
+				return true;
+			}else
+			{
+				extlog.log(LogStatus.FAIL,captureScreenShot("MenJeansFilter"),
+						"Men filter not displayed");
+				return false;
+			}
+			
+		}else
+		{
+			extlog.log(LogStatus.FAIL,captureScreenShot("MenFilter"),
+					"Men filter not displayed");
+			return false;
+		}
+		
+		
+	}
+	public boolean verify() {
+		List<WebElement> products = driver.findElements(By.xpath(productsPageObject.productsDisplayed));
+		if(products.size()==3) {int i=1;
+			for (WebElement obj :products) {
+				String xpath= "("+productsPageObject.productsDisplayed+")["+i+"]"; 
+				highlightAndCapture("Men jeans product displayed no :"+i, By.xpath(xpath), "Menjeans"+i);	
+				i++;
+			}
+			clickElement(homePageObject.home);
+			sleep(5);
+			return true;
+		}else
+		{
+			extlog.log(LogStatus.FAIL,captureScreenShot("Menjeans"),
+					"3 Products are not displayed");
+			return false;
+		}
+		
+	}
+	
+	public boolean verifyAndViewProduct() {
+		scrollToElement(By.xpath(productsPageObject.viewProduct.replace("VALUE", productsPageObject.frozenTopName)));
+		
+		if (elementDisplayed(productsPageObject.product478Highlight)) {
+			highlightAndCapture("Product with 478rs price displayed.", productsPageObject.product478Highlight, "product478Highlight");
+			clickElement(productsPageObject.product478);
+			return elementDisplayed(productsPageObject.product478View);
+		}else
+		{
+			extlog.log(LogStatus.FAIL,captureScreenShot("product478Highlight"),
+					"Product with 478rs price not displayed.");
+			return false;
+		}
+	}
+	
+	public boolean addReviewAndSubmit() {
+		if (verifyAndViewProduct()) {
+			highlightAndCapture("Product with 478rs price view Product Page displayed.", productsPageObject.product478View, "product478ViewPage");
+			scrollToElement(productsPageObject.product478View);
+			SoftAssert softAssert = new SoftAssert();
+			softAssert.assertTrue(addInputValue(productsPageObject.reviewName, signUpPageObjects.nameValue));
+			softAssert.assertTrue(addInputValue(productsPageObject.reviewEmail, signUpPageObjects.emailValue));
+			softAssert.assertTrue(addInputValue(productsPageObject.reviewInput, productsPageObject.review));
+			softAssert.assertAll();
+			clickElement(productsPageObject.reviewSubmit);
+			boolean flag =elementDisplayed(productsPageObject.reviewsuccess);
+			if (flag) {
+				highlightAndCapture("Review submitted successfully for Product with 478rs price.", productsPageObject.reviewsuccess, "product478reviewSuccess");
+				clickElement(homePageObject.home);
+				sleep(5);
+				return flag;
+			}else{
+				extlog.log(LogStatus.FAIL,captureScreenShot("product478ViewPage"),
+						"Failed to submit review for Product with 478rs price");
+				return false;
+			}
+				
+		}else
+		{
+			extlog.log(LogStatus.FAIL,captureScreenShot("product478ViewPage"),
+					"Product with 478rs price view Product Page not displayed.");
+			return false;
+		}
+	}
+
 	
 
 }

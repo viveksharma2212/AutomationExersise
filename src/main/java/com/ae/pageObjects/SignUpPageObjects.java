@@ -1,5 +1,7 @@
 package com.ae.pageObjects;
 
+import java.util.Random;
+
 import org.openqa.selenium.By;
 
 public class SignUpPageObjects {
@@ -24,12 +26,13 @@ public class SignUpPageObjects {
 	public By mobileNumber = By.xpath("//input[@id='mobile_number']");
 	public By createAccount = By.xpath("//button[normalize-space()='Create Account']");
 	public By continueBtn = By.xpath("//a[normalize-space()='Continue']");
-//	public By  = By.xpath("");
+	public By logout = By.xpath("//a[normalize-space()='Logout']");
 	
-
+	public static Random rand = new Random(); 
+	public static int value = rand.nextInt(99999); 
 
 	public String nameValue = "Vivek Sharma";
-	public String emailValue = "test222212@test.com";
+	public String emailValue = "vivek"+value+"@test.com";///"test222212@test.com";///
 	public String titleValue = "Mr";
 	public String passwordValue = "test121221";
 	public String dayValue = "22";

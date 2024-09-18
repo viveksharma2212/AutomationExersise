@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,12 +25,20 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.ae.pageObjects.CartPageObjects;
+import com.ae.pageObjects.HomePageObjects;
+import com.ae.pageObjects.ProductsPageObject;
+import com.ae.pageObjects.SignUpPageObjects;
 import com.ae.utility.PropertyReader;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.restassured.RestAssured;
+import io.restassured.http.Method;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 public class TestBase {
 	private final Logger LOGGER = Logger.getLogger(TestBase.class.getName());
@@ -39,9 +48,14 @@ public class TestBase {
 
 	public static ExtentReports reports;
 	public static ExtentTest extlog;
+	
 
 	public static String workingDir = System.getProperty("user.dir");
 	public static String extentReportDir = workingDir + "/ExtentReport/" + currentDate() + "OutputReport/";
+	public CartPageObjects cartPageObjects = new CartPageObjects();
+	public SignUpPageObjects signUpPageObjects = new SignUpPageObjects();
+	public HomePageObjects homePageObject=new HomePageObjects();
+	public ProductsPageObject productsPageObject= new ProductsPageObject();
 
 	public static String currentDate() {
 		Date date = new Date();
@@ -49,6 +63,27 @@ public class TestBase {
 		String currentDate = df.format(date);
 		return currentDate;
 	}
+	
+    public Response sendRequest(Method method, String endpoint, Map<String, String> multipartParams) {
+   	 RequestSpecification request = RestAssured.given();
+   	 RestAssured.baseURI = "https://www.automationexercise.com/api";
+   	 request = RestAssured.given();
+
+       if (multipartParams != null) {
+           for (Map.Entry<String, String> entry : multipartParams.entrySet()) {
+               request.multiPart(entry.getKey(), entry.getValue());
+           }
+       }
+
+       Response response = request
+               .when()
+               .request(method, endpoint)
+               .then()
+               .extract().response();
+
+       return response;
+   }
+
 
 	public String[][] readFromExcel(String filePath, String sheetName)  {
 
@@ -79,21 +114,21 @@ public class TestBase {
 	public String captureScreenshotPath(String tcName) {
 
 		String path;
-		path = extentReportDir + "/screenshots/" + currentDate() + tcName + ".png";
+		String fileName=currentDate() + tcName + ".png";
+		path = extentReportDir + "/screenshots/" + fileName;
 		File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		try {
 			FileUtils.copyFile(screenshotFile, new File(path));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return path;
+		return "screenshots//"+fileName;
 	}
 	
 	public void highlightElement(By xpath)
 	{
 		JavascriptExecutor jse = (JavascriptExecutor) driver;
 		jse.executeScript("arguments[0].style.border='3px solid red'", element(xpath));
-		//sleep(1);
 	}
 	
 	public void unhighlightElement(By xpath)
@@ -108,6 +143,13 @@ public class TestBase {
 		//sleep(2);
 		
 		return path;
+	}
+	
+	public void highlightAndCapture(String desc, By xpath, String screenshotName) {
+		extlog.log(LogStatus.PASS, desc);
+		highlightElement(xpath);
+		extlog.log(LogStatus.INFO, captureScreenShot(screenshotName));
+		unhighlightElement(xpath);
 	}
 
 	public void setBrowser(String browserName) {
@@ -133,6 +175,9 @@ public class TestBase {
 				"Launching URL:-" + PropertyReader.readVariable("config.properties", "ae.gui.url"));
 		driver.get(PropertyReader.readVariable("config.properties", "ae.gui.url"));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
+		clickElement(homePageObject.manageOptionsBtn);
+		sleep(1);
+		clickElement(homePageObject.confirmChoicesBtn);
 	}
 	
 	public void sleep(int seconds)
@@ -208,10 +253,7 @@ public class TestBase {
 	public boolean addInputValue(By xpath, String data) {
 		clickAndFill(xpath, data);
 		if (getValue(xpath).equalsIgnoreCase(data)) {
-			extlog.log(LogStatus.PASS, "Successfully filled data as:-" + data);
-			highlightElement(xpath);
-			extlog.log(LogStatus.INFO, captureScreenShot("addData_" + data));
-			unhighlightElement(xpath);
+			highlightAndCapture("Successfully filled data as:-" + data, xpath, "addData_" + data);
 			return true;
 		} else {
 			return false;
@@ -223,11 +265,7 @@ public class TestBase {
 		String xpathOption = "//option[normalize-space()='VALUE']";
 		By option = By.xpath(xpathOption.replace("VALUE", value));
 		clickElement(option);
-
-		extlog.log(LogStatus.PASS, "Successfully selected value as:-" + value);
-		highlightElement(xpath);
-		extlog.log(LogStatus.INFO, captureScreenShot("selectValue_" + value));
-		unhighlightElement(xpath);
+		highlightAndCapture("Successfully selected value as:-" + value, xpath, "selectValue_" + value);
 		return true;
 
 	}
@@ -237,10 +275,7 @@ public class TestBase {
 		String xpathOption = "//input[@value='VALUE']";
 		By option = By.xpath(xpathOption.replace("VALUE", value));
 		clickElement(option);
-		extlog.log(LogStatus.PASS, "Successfully selected value as:-" + value);
-		highlightElement(option);
-		extlog.log(LogStatus.INFO, captureScreenShot("selectValue_" + value));
-		unhighlightElement(option);
+		highlightAndCapture("Successfully selected value as:-" + value, option, "selectValue_" + value);
 		return true;
 	}
 
