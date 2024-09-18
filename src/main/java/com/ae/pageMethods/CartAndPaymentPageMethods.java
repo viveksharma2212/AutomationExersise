@@ -47,19 +47,19 @@ public class CartAndPaymentPageMethods extends TestBase {
 			extlog.log(LogStatus.INFO, captureScreenShot("payment"));
 
 			SoftAssert softAssert = new SoftAssert();
-			softAssert.assertTrue(addInputValue(cartPageObjects.nameOnCard, signUpPageObjects.nameValue));
-			softAssert.assertTrue(addInputValue(cartPageObjects.cardNumber, cartPageObjects.cardNumberValue));
-			softAssert.assertTrue(addInputValue(cartPageObjects.cvv, cartPageObjects.cvvValue));
-			softAssert.assertTrue(addInputValue(cartPageObjects.expMonth, cartPageObjects.expMonthValue));
-			softAssert.assertTrue(addInputValue(cartPageObjects.expYear, cartPageObjects.expYearValue));
+			softAssert.assertTrue(addInputValue(cartPageObjects.nameOnCard, readJson("user.name")));
+			softAssert.assertTrue(addInputValue(cartPageObjects.cardNumber, readJson("payment.cardNumber")));
+			softAssert.assertTrue(addInputValue(cartPageObjects.cvv, readJson("payment.cvv")));
+			softAssert.assertTrue(addInputValue(cartPageObjects.expMonth, readJson("payment.expirationDate.month")));
+			softAssert.assertTrue(addInputValue(cartPageObjects.expYear, readJson("payment.expirationDate.year")));
 			softAssert.assertAll();
 			clickElement(cartPageObjects.payAndConfirm);
 			if (elementDisplayed(cartPageObjects.orderPaced)) {
 				extlog.log(LogStatus.PASS, "Order Placed successfully");
 				extlog.log(LogStatus.INFO, captureScreenShot("orderConfirmed"));
-				clickElement(signUpPageObjects.logout);
-				sleep(5);
-				clickElement(homePageObject.home);
+//				clickElement(signUpPageObjects.logout);
+//				sleep(5);
+//				clickElement(homePageObject.home);
 				return true;
 			} else {
 				extlog.log(LogStatus.FAIL, captureScreenShot("ProductCheckOut"), "failed to place Order successfully");

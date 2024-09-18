@@ -1,5 +1,6 @@
 package com.ae.pageMethods;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -53,27 +54,29 @@ public class ProductsPageMethods extends TestBase {
 	
 	public boolean addSingleProduct() {
 		clickElement(homePageObject.products);
-		addProductToCartAndValidate(productsPageObject.frozenTopName);
+		addProductToCartAndValidate(readJson("orders.singleProductName"));
 		clickElement(productsPageObject.viewCart);
 		sleep(5);
-		return cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.frozenTopName);
+		return cartAndPaymentPageMethods.verifyProductDisplayed(readJson("orders.singleProductName"));
 	}
 	
 	public boolean addMultipleProduct() {
+		List<String> productList = Arrays.asList(readJson("orders.multipleProductName").split(","));
+		
 		clickElement(homePageObject.products);
-		addProductToCartAndValidate(productsPageObject.peacockSaree);
+		addProductToCartAndValidate(productList.get(0));
 		clickElement(productsPageObject.continueShopping);
 		
-		addProductToCartAndValidate(productsPageObject.sleevelessDress);
+		addProductToCartAndValidate(productList.get(1));
 		clickElement(productsPageObject.continueShopping);
 		
-		addProductToCartAndValidate(productsPageObject.pureCottonTShirt);
+		addProductToCartAndValidate(productList.get(2));
 		clickElement(productsPageObject.viewCart);
 		SoftAssert softAssert = new SoftAssert();
-		softAssert.assertTrue(cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.peacockSaree));
-		softAssert.assertTrue(cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.sleevelessDress));
+		softAssert.assertTrue(cartAndPaymentPageMethods.verifyProductDisplayed(productList.get(0)));
+		softAssert.assertTrue(cartAndPaymentPageMethods.verifyProductDisplayed(productList.get(1)));
 		softAssert.assertAll();
-		return cartAndPaymentPageMethods.verifyProductDisplayed(productsPageObject.pureCottonTShirt);
+		return cartAndPaymentPageMethods.verifyProductDisplayed(productList.get(2));
 	}
 	
 	
@@ -112,8 +115,8 @@ public class ProductsPageMethods extends TestBase {
 				highlightAndCapture("Men jeans product displayed no :"+i, By.xpath(xpath), "Menjeans"+i);	
 				i++;
 			}
-			clickElement(homePageObject.home);
-			sleep(5);
+//			clickElement(homePageObject.home);
+//			sleep(5);
 			return true;
 		}else
 		{
@@ -125,7 +128,7 @@ public class ProductsPageMethods extends TestBase {
 	}
 	
 	public boolean verifyAndViewProduct() {
-		scrollToElement(By.xpath(productsPageObject.viewProduct.replace("VALUE", productsPageObject.frozenTopName)));
+		scrollToElement(By.xpath(productsPageObject.viewProduct.replace("VALUE", readJson("orders.singleProductName"))));
 		
 		if (elementDisplayed(productsPageObject.product478Highlight)) {
 			highlightAndCapture("Product with 478rs price displayed.", productsPageObject.product478Highlight, "product478Highlight");
@@ -144,16 +147,16 @@ public class ProductsPageMethods extends TestBase {
 			highlightAndCapture("Product with 478rs price view Product Page displayed.", productsPageObject.product478View, "product478ViewPage");
 			scrollToElement(productsPageObject.product478View);
 			SoftAssert softAssert = new SoftAssert();
-			softAssert.assertTrue(addInputValue(productsPageObject.reviewName, signUpPageObjects.nameValue));
+			softAssert.assertTrue(addInputValue(productsPageObject.reviewName, readJson("user.name")));
 			softAssert.assertTrue(addInputValue(productsPageObject.reviewEmail, signUpPageObjects.emailValue));
-			softAssert.assertTrue(addInputValue(productsPageObject.reviewInput, productsPageObject.review));
+			softAssert.assertTrue(addInputValue(productsPageObject.reviewInput, readJson("orders.review")));
 			softAssert.assertAll();
 			clickElement(productsPageObject.reviewSubmit);
 			boolean flag =elementDisplayed(productsPageObject.reviewsuccess);
 			if (flag) {
 				highlightAndCapture("Review submitted successfully for Product with 478rs price.", productsPageObject.reviewsuccess, "product478reviewSuccess");
-				clickElement(homePageObject.home);
-				sleep(5);
+//				clickElement(homePageObject.home);
+//				sleep(5);
 				return flag;
 			}else{
 				extlog.log(LogStatus.FAIL,captureScreenShot("product478ViewPage"),

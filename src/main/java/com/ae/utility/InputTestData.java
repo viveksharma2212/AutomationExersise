@@ -10,7 +10,7 @@ public class InputTestData extends TestBase{
 	@DataProvider
 	public Object[][] Signup()  {
 		Object[][] data;
-			data = readFromExcel(workingDir + "/src/main/resources/TestData/TestData.xlsx", "Testcasedata");
+			data = readFromExcel(workingDir + "/src/main/resources/TestData/TestData.xlsx", "01SignUpData");
 			return data;
 	}
 	

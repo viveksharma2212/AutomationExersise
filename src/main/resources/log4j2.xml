@@ -1,0 +1,21 @@
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %t %c{1} - %m%n" />
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Root level="DEBUG">
+			<AppenderRef ref="Console" />
+		</Root>
+		<Logger name="com.journaldev.log4j" level="DEBUG"
+			additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="com.journaldev.log4j.logic" level="DEBUG"
+			additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+	</Loggers>
+</Configuration>

@@ -26,7 +26,6 @@ public class BaseTestClass extends TestBase {
 	@BeforeSuite
 	public void beforeSuite() {
 		reports = new ExtentReports(extentReportDir + "ExecutionReport.html");
-		//setBrowser(PropertyReader.readVariable("config.properties", "ae.browser.chrome"));
 	}
 
 
@@ -47,12 +46,6 @@ public class BaseTestClass extends TestBase {
     public void afterClass() {
 		driver.close();
     }
-	
-	
-	@BeforeTest
-	public void beforeTest() {
-		//launch();
-	}
 	
 
 	

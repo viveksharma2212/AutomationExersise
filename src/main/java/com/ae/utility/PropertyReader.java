@@ -4,10 +4,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PropertyReader {
-	private static final Logger LOGGER = Logger.getLogger(PropertyReader.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(PropertyReader.class);
 	
 	public static Properties readPropertyFile(String fileName)
 	{
@@ -17,9 +18,9 @@ public class PropertyReader {
 		try (FileInputStream fis = new FileInputStream(filepath)) {
 		    prop.load(fis);
 		} catch (FileNotFoundException ex) {
-			LOGGER.log(Level.SEVERE, filepath+" not Found", ex);
+			LOGGER.info( filepath+" not Found", ex);
 		} catch (IOException ex) {
-			LOGGER.log(Level.SEVERE,"IOException", ex);
+			LOGGER.info("IOException", ex);
 		}
 		return prop;
 	}
@@ -31,7 +32,7 @@ public class PropertyReader {
 			return value;
 		}else
 		{
-			LOGGER.log(Level.SEVERE, variableName+" variable does not present in "+fileName);
+			LOGGER.info( variableName+" variable does not present in "+fileName);
 			throw new NullPointerException(variableName+" variable does not present in "+fileName);
 		}
 	}

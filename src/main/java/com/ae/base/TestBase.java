@@ -7,8 +7,8 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.*;
@@ -30,6 +30,8 @@ import com.ae.pageObjects.HomePageObjects;
 import com.ae.pageObjects.ProductsPageObject;
 import com.ae.pageObjects.SignUpPageObjects;
 import com.ae.utility.PropertyReader;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
@@ -41,8 +43,9 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 public class TestBase {
-	private final Logger LOGGER = Logger.getLogger(TestBase.class.getName());
-
+	//private final Logger LOGGER = Logger.getLogger(TestBase.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(TestBase.class);
+	
 	public static WebDriver driver;
 	public static WebDriverWait wait;
 
@@ -83,6 +86,29 @@ public class TestBase {
 
        return response;
    }
+    
+	public String readJson(String parameter)  {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+		try {
+			jsonNode = mapper.readTree(new File(workingDir +"/src/main/resources/TestData/TestData.json"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        String[] path = parameter.split("\\.");
+
+        JsonNode node = jsonNode;
+        for (String p : path) {
+            node = node.get(p);
+            if (node == null) {
+                return "Invalid parameter";
+            }
+        }
+
+        return node.asText();
+    }
 
 
 	public String[][] readFromExcel(String filePath, String sheetName)  {
@@ -107,11 +133,10 @@ public class TestBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}throw new NullPointerException("Unable to Retrive data from Excel");
-		
-		
-		
+			
 	}
-	public String captureScreenshotPath(String tcName) {
+	
+	public String captureScreenShot(String tcName) {
 
 		String path;
 		String fileName=currentDate() + tcName + ".png";
@@ -122,7 +147,8 @@ public class TestBase {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "screenshots//"+fileName;
+		return path =extlog.addScreenCapture("screenshots//"+fileName);
+		
 	}
 	
 	public void highlightElement(By xpath)
@@ -137,13 +163,7 @@ public class TestBase {
 		jse.executeScript("arguments[0].style.border='0px solid red'", element(xpath));
 		//sleep(1);
 	}
-	public String captureScreenShot(String tcName) {
-		
-		String path =extlog.addScreenCapture(captureScreenshotPath(tcName));
-		//sleep(2);
-		
-		return path;
-	}
+
 	
 	public void highlightAndCapture(String desc, By xpath, String screenshotName) {
 		extlog.log(LogStatus.PASS, desc);
@@ -153,25 +173,23 @@ public class TestBase {
 	}
 
 	public void setBrowser(String browserName) {
-		if (browserName.equalsIgnoreCase("firefox")) {
-			// To Be implemented
-		} else if (browserName.equalsIgnoreCase("chrome")) {
-			//System.setProperty("webdriver.chrome.driver",
-			//		workingDir + "/src/main/resources/drivers/chromedriver.exe");
+		if (browserName.equalsIgnoreCase("chrome")) {
 			
 			WebDriverManager.chromedriver().setup();
 			ChromeOptions options = new ChromeOptions();
 			options.addArguments("--disable-search-engine-choice-screen");
 			driver = new ChromeDriver(options);
 			wait = new WebDriverWait(driver, Duration.ofSeconds(60));
-			LOGGER.log(Level.INFO, "Setting Chrome Browser");
-		}
+			LOGGER.info( "Setting Chrome Browser");
+		}else if (browserName.equalsIgnoreCase("firefox")) {
+			// To Be implemented
+		} 
 	}
 
 	public void launch() {
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
-		LOGGER.log(Level.INFO,
+		LOGGER.info(
 				"Launching URL:-" + PropertyReader.readVariable("config.properties", "ae.gui.url"));
 		driver.get(PropertyReader.readVariable("config.properties", "ae.gui.url"));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
@@ -193,7 +211,7 @@ public class TestBase {
 
 	public WebElement element(By xpath) {
 		try {
-			LOGGER.log(Level.INFO, "finding an element:-" + xpath);
+			LOGGER.info( "finding an element:-" + xpath);
 			wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(xpath));
 			return driver.findElement(xpath);
 		} catch (NoSuchElementException  e) {
@@ -213,17 +231,17 @@ public class TestBase {
 	public boolean elementDisplayed(By xpath) {
 		boolean flag = element(xpath).isDisplayed();
 		if (flag) {
-			LOGGER.log(Level.INFO, "Element:-" + xpath + " is Displayed");
+			LOGGER.info( "Element:-" + xpath + " is Displayed");
 			return true;
 		} else {
-			LOGGER.log(Level.INFO, "Element:-" + xpath + " is not Displayed");
+			LOGGER.info( "Element:-" + xpath + " is not Displayed");
 			return false;
 		}
 	}
 
 	public void clickElement(By xpath) {
 		element(xpath).click();
-		LOGGER.log(Level.INFO, "clicked on element:-" + xpath);
+		LOGGER.info( "clicked on element:-" + xpath);
 	}
 	
 	public String getValue(By xpath) {
@@ -232,14 +250,14 @@ public class TestBase {
 		if (value.isEmpty()) {
 			value =element(xpath).getAttribute("value");
 		}
-		LOGGER.log(Level.INFO, "Fetched value as:"+value+"for element:-" + xpath);
+		LOGGER.info( "Fetched value as:"+value+"for element:-" + xpath);
 		return value;
 	}
 
 	public void clickAndFill(By xpath, String value) {
 		WebElement element = element(xpath);
 		element.click();
-		LOGGER.log(Level.INFO, "clicked on element:-" + xpath);
+		LOGGER.info( "clicked on element:-" + xpath);
 		element.click();
 		element.clear();
 		element.sendKeys(value);
