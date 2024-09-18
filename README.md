@@ -5,6 +5,7 @@ Overview
 
 
 This repository contains automated tests for (https://www.automationexercise.com/) e-commerce website using Selenium WebDriver and Java for UI testing, and API testing using REST Assured. 
+Along with sample Extent Report generated after Excution for referance.
 
 The following UI test scenarios are covered:
 1. User Sign-up: Verify that a new user can successfully sign up on the website.
