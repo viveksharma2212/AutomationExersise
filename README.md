@@ -4,7 +4,7 @@ Automation Exercise
 Overview
 
 
-This repository contains automated tests for (https://www.automationexercise.com/) e-commerce website using Selenium WebDriver and Java for UI testing, and API testing using REST Assured. 
+This repository contains automated tests for (https://www.automationexercise.com/) e-commerce website using Selenium WebDriver and Java for UI testing, and API testing using REST Assured using TestNg for Execution of tests. 
 Along with sample Extent Report generated after Excution for referance.
 
 The following UI test scenarios are covered:
